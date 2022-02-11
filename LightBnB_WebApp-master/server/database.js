@@ -120,16 +120,11 @@ const getAllProperties = function(options, limit = 10) {
   LIMIT $${queryParams.length}
   `;
 
-  console.log('query: ', queryString);
-  console.log('params: ', queryParams);
-
   return pool.query(queryString, queryParams)
   .then((result) => {
-    console.log('res:', result);
     return result.rows
   })
   .catch((err) => {
-    console.log('err: ', err);
     return null
   });
 }
