@@ -33,7 +33,6 @@ const getUserWithId = function(id) {
 }
 exports.getUserWithId = getUserWithId;
 
-
 /**
  * Add a new user to the database.
  */
@@ -121,22 +120,32 @@ const getAllProperties = function(options, limit = 10) {
   `;
 
   return pool.query(queryString, queryParams)
-  .then((result) => {
-    return result.rows
-  })
+  .then((result) => result.rows)
   .catch((err) => {
     return null
   });
 }
 exports.getAllProperties = getAllProperties;
 
-
 /**
  * Add a property to the database
- * @param {{}} property An object containing all of the property details.
- * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
+  const queryParams = [];
+  for (const key in property) {
+    queryParams.push(property[key]);
+  };
   
+  const queryString = `
+  INSERT INTO properties (title, description, number_of_bedrooms, number_of_bathrooms, parking_spaces, cost_per_night, thumbnail_photo_url, cover_photo_url, street, country, city, province, post_code, owner_id)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) 
+  RETURNING *;
+  `;
+
+  return pool.query(queryString, queryParams)
+  .then((result) => result.rows)
+  .catch((err) => {
+    console.log(err);
+  })
 }
 exports.addProperty = addProperty;
